@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { ApplicationModule } from './application/application.module';
 import * as Joi from 'joi';
+import { ApplicationModule } from './application/application.module';
 import { DatabaseModule } from './infra/database/database.module';
 
 @Module({

@@ -6,13 +6,15 @@ import { EntityManager } from 'typeorm';
 export class CompanyRepository {
   constructor(private readonly entityManager: EntityManager) {}
 
-  async find(): Promise<Company[]> {
+  async find(): Promise<Company[] | []> {
     return this.entityManager.query('SELECT * FROM companies');
   }
 
   async findById(id: string): Promise<Company> {
-    return this.entityManager.query(
+    const [company] = await this.entityManager.query(
       `SELECT * FROM companies WHERE id = '${id}'`,
     );
+
+    return company;
   }
 }

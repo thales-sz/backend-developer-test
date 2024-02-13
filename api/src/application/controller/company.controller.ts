@@ -1,18 +1,22 @@
 import { Controller, Get, Param } from '@nestjs/common';
-import { FetchCompanyDto } from 'src/domain/dto/fetch-company.dto';
-import { CompanyService } from 'src/domain/service/company.service';
+import { FetchCompaniesUseCase } from '../use-cases/company/fetch-companies.use-case';
+import { FetchCompanyByIdUseCase } from '../use-cases/company/fetch-company-by-id.use-case';
+import { FetchCompanyDto } from '../../domain/dto/fetch-company.dto';
 
 @Controller('companies')
 export class CompanyController {
-  constructor(private readonly companyService: CompanyService) {}
+  constructor(
+    private readonly fetchCompaniesUseCase: FetchCompaniesUseCase,
+    private readonly fetchCompanyByIdUseCase: FetchCompanyByIdUseCase,
+  ) {}
 
   @Get()
   async fetchCompanies() {
-    return this.companyService.fetchCompanies();
+    return this.fetchCompaniesUseCase.execute();
   }
 
   @Get('/:company_id')
   async fetchCompanyById(@Param() param: FetchCompanyDto) {
-    return this.companyService.fetchCompanyById(param.company_id);
+    return this.fetchCompanyByIdUseCase.execute(param.company_id);
   }
 }

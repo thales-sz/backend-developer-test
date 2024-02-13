@@ -1,5 +1,5 @@
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
+import { AppModule } from '../app.module';
 import { INestApplication, Logger, ValidationPipe } from '@nestjs/common';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { ConfigService } from '@nestjs/config';
@@ -26,8 +26,12 @@ async function bootstrap() {
     }),
   );
 
-  await app.listen(configService.get('PORT'));
-
-  logger.log(`Server is running on PORT: ${await configService.get('PORT')}`);
+  app
+    .listen(configService.get('PORT'))
+    .then(async () =>
+      logger.log(
+        `Server is running on PORT: ${await configService.get('PORT')}`,
+      ),
+    );
 }
 bootstrap();

@@ -11,5 +11,5 @@ export class Company extends AbstractEntity<Company> {
   name: string;
 
   @OneToMany(() => Job, (job) => job.company)
-  jobs: Job[];
+  jobs?: Job[];
 }
