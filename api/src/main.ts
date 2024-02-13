@@ -22,14 +22,8 @@ async function bootstrap() {
 
   app.use(compression());
 
-  await app.startAllMicroservices();
-
   await app.listen(configService.get('PORT'));
 
-  logger.log(
-    `${AppModule.name} server is running on PORT: ${await configService.get(
-      'PORT',
-    )}`,
-  );
+  logger.log(`Server is running on PORT: ${await configService.get('PORT')}`);
 }
 bootstrap();
