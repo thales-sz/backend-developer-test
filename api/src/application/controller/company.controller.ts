@@ -1,4 +1,5 @@
 import { Controller, Get, Param } from '@nestjs/common';
+import { FetchCompanyDto } from 'src/domain/dto/fetch-company.dto';
 import { CompanyService } from 'src/domain/service/company.service';
 
 @Controller('companies')
@@ -11,7 +12,7 @@ export class CompanyController {
   }
 
   @Get('/:company_id')
-  async fetchCompanyById(@Param('company_id') companyId: string) {
-    return `fetchCompanyById ${companyId}`;
+  async fetchCompanyById(@Param() param: FetchCompanyDto) {
+    return this.companyService.fetchCompanyById(param.company_id);
   }
 }

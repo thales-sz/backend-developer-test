@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { join } from 'path';
+import { CompanyRepository } from './repositories/company.repository';
 
 @Module({
   imports: [
@@ -19,7 +20,7 @@ import { join } from 'path';
       inject: [ConfigService],
     }),
   ],
-  providers: [],
-  exports: [],
+  providers: [CompanyRepository],
+  exports: [CompanyRepository],
 })
 export class DatabaseModule {}

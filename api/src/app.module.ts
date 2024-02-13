@@ -2,9 +2,12 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ApplicationModule } from './application/application.module';
 import * as Joi from 'joi';
+import { DatabaseModule } from './infra/database/database.module';
+
 @Module({
   imports: [
     ApplicationModule,
+    DatabaseModule,
     ConfigModule.forRoot({
       isGlobal: true,
       validationSchema: Joi.object({
@@ -20,5 +23,6 @@ import * as Joi from 'joi';
   ],
   controllers: [],
   providers: [],
+  exports: [],
 })
 export class AppModule {}
