@@ -16,12 +16,7 @@ describe('CompanyController', () => {
       providers: [
         FetchCompaniesUseCase,
         FetchCompanyByIdUseCase,
-        {
-          provide: CompanyRepository,
-          useValue: {
-            find: jest.fn(),
-          },
-        },
+        CompanyRepository,
       ],
     }).compile();
 

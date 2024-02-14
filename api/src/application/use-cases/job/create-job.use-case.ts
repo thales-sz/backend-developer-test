@@ -3,12 +3,17 @@ import { JobRepository } from '../../../infra/database/repositories/job.reposito
 import { CreateJobDto } from '../../../domain/dto/create-job.dto';
 import { Job } from '../../../domain/entity/job.entity';
 import { CompanyRepository } from '../../../infra/database/repositories/company.repository';
+import { makeJob } from '../../../main/factory/job.factory';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Company } from '../../../domain/entity/company.entity';
 @Injectable()
 export class CreateJobUseCase {
   protected logger: Logger = new Logger(CreateJobUseCase.name);
 
   constructor(
+    @InjectRepository(Job)
     private readonly jobRepository: JobRepository,
+    @InjectRepository(Company)
     private readonly companyRepository: CompanyRepository,
   ) {}
 
@@ -22,11 +27,8 @@ export class CreateJobUseCase {
       throw new NotFoundException('Company not found');
     }
 
-    const newJob = new Job({
-      ...job,
-      company,
-    });
+    const newJob = makeJob({ ...job, company });
 
-    return this.jobRepository.create(newJob);
+    return this.jobRepository.save(newJob);
   }
 }

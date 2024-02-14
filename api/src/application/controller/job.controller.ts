@@ -8,7 +8,6 @@ export class JobController {
 
   @Post()
   async create(@Body() job: CreateJobDto) {
-    console.log(job);
     return this.createJobUseCase.execute(job);
   }
   // @Get('/:job_id')
