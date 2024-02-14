@@ -15,7 +15,7 @@ describe('FetchCompanyByIdUseCase', () => {
         {
           provide: CompanyRepository,
           useValue: {
-            findById: jest.fn(),
+            findOneBy: jest.fn(),
           },
         },
       ],
@@ -29,7 +29,7 @@ describe('FetchCompanyByIdUseCase', () => {
 
   it('should fetch company by id successfully', async () => {
     const mockCompanies = makeFakeCompany();
-    jest.spyOn(companyRepository, 'findById').mockResolvedValue(mockCompanies);
+    jest.spyOn(companyRepository, 'findOneBy').mockResolvedValue(mockCompanies);
 
     const companies = await fetchCompanyByIdUseCase.execute('1');
 
@@ -39,7 +39,7 @@ describe('FetchCompanyByIdUseCase', () => {
 
   it('should throw NotFoundException if no company is found by id', async () => {
     jest
-      .spyOn(companyRepository, 'findById')
+      .spyOn(companyRepository, 'findOneBy')
       .mockRejectedValue(new NotFoundException());
 
     await expect(fetchCompanyByIdUseCase.execute('1')).rejects.toThrow(

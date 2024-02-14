@@ -9,7 +9,7 @@ export class FetchCompanyByIdUseCase {
   constructor(private readonly companyRepository: CompanyRepository) {}
 
   async execute(id: string): Promise<Company> {
-    const company = await this.companyRepository.findById(id);
+    const company = await this.companyRepository.findOneBy({ id });
 
     if (!company) {
       this.logger.error(`Company with id ${id} not found`);

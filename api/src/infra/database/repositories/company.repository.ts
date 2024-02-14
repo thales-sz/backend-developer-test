@@ -1,20 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { Company } from 'src/domain/entity/company.entity';
-import { EntityManager } from 'typeorm';
+import { Company } from '../../../domain/entity/company.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
-export class CompanyRepository {
-  constructor(private readonly entityManager: EntityManager) {}
-
-  async find(): Promise<Company[] | []> {
-    return this.entityManager.query('SELECT * FROM companies');
-  }
-
-  async findById(id: string): Promise<Company> {
-    const [company] = await this.entityManager.query(
-      `SELECT * FROM companies WHERE id = '${id}'`,
-    );
-
-    return company;
-  }
-}
+export class CompanyRepository extends Repository<Company> {}

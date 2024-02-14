@@ -6,9 +6,16 @@ import { FetchCompaniesUseCase } from './use-cases/company/fetch-companies.use-c
 import { FetchCompanyByIdUseCase } from './use-cases/company/fetch-company-by-id.use-case';
 import { DatabaseModule } from '../infra/database/database.module';
 import { CreateJobUseCase } from './use-cases/job/create-job.use-case';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Company } from '../domain/entity/company.entity';
+import { Job } from '../domain/entity/job.entity';
 
 @Module({
-  imports: [DomainModule, DatabaseModule],
+  imports: [
+    DomainModule,
+    DatabaseModule,
+    TypeOrmModule.forFeature([Company, Job]),
+  ],
   controllers: [CompanyController, JobController],
   providers: [FetchCompaniesUseCase, FetchCompanyByIdUseCase, CreateJobUseCase],
 })

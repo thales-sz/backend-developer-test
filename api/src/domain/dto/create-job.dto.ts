@@ -1,9 +1,9 @@
 import {
   IsEnum,
   IsNotEmpty,
-  IsNotEmptyObject,
   IsOptional,
   IsString,
+  IsUUID,
 } from 'class-validator';
 import { JobStatus } from '../enum/job-status.enum';
 
@@ -25,8 +25,9 @@ export class CreateJobDto {
   notes?: string;
 
   @IsNotEmpty()
-  @IsNotEmptyObject()
-  company: { companyId: string };
+  @IsString()
+  @IsUUID()
+  companyId: string;
 
   @IsEnum(JobStatus)
   @IsNotEmpty()
