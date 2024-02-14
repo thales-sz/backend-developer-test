@@ -15,7 +15,7 @@ export class FetchCompaniesUseCase {
   async execute(): Promise<Company[]> {
     const company = await this.companyRepository.find();
 
-    if (!company) {
+    if (!company || company.length === 0) {
       this.logger.error('No companies found');
       throw new NotFoundException('No companies found');
     }

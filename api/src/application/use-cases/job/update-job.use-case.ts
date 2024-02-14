@@ -18,8 +18,6 @@ export class UpdateJobUseCase {
       throw new NotFoundException(`Job with id ${job.id} not found`);
     }
 
-    await this.jobRepository.update(oldJob.id, job);
-
-    return this.jobRepository.findOneBy({ id: job.id });
+    return this.jobRepository.save(job);
   }
 }

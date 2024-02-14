@@ -40,9 +40,7 @@ describe('FetchCompaniesUseCase', () => {
   });
 
   it('should throw NotFoundException if no companies are found', async () => {
-    jest
-      .spyOn(companyRepository, 'find')
-      .mockRejectedValue(new NotFoundException());
+    jest.spyOn(companyRepository, 'find').mockResolvedValue([]);
 
     await expect(fetchCompaniesUseCase.execute()).rejects.toThrow(
       NotFoundException,

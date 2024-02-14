@@ -8,6 +8,7 @@ import { repositoryMockFactory } from '../../../test/factory/repositories/reposi
 import { Company } from '../../domain/entity/company.entity';
 import { UpdateJobUseCase } from '../use-cases/job/update-job.use-case';
 import { DeleteJobUseCase } from '../use-cases/job/delete-job.use-case';
+import { JobStatus } from '../../domain/enum/job-status.enum';
 
 describe('JobController', () => {
   let controller: JobController;
@@ -38,40 +39,6 @@ describe('JobController', () => {
     expect(controller).toBeDefined();
   });
 
-  it('should fetch jobs successfully', async () => {
-    // const mockJobs = [makeFakeJob(), makeFakeJob()];
-    // jest
-    //   .spyOn(controller['fetchJobsUseCase'], 'execute')
-    //   .mockResolvedValue(mockJobs);
-    // const Jobs = await controller.fetchJobs();
-    // expect(Jobs).toEqual(mockJobs);
-  });
-
-  it('should fetch Job by id successfully', async () => {
-    // const mockJob = makeFakeJob();
-    // jest
-    //   .spyOn(controller['fetchJobByIdUseCase'], 'execute')
-    //   .mockResolvedValue(mockJob);
-    // const job = await controller.fetchJobById({ id: '1' });
-    // expect(job).toEqual(mockJob);
-  });
-
-  it('should throw NotFoundException if no Jobs are found', async () => {
-    // jest
-    //   .spyOn(controller['fetchJobsUseCase'], 'execute')
-    //   .mockRejectedValue(new NotFoundException());
-    // await expect(controller.fetchJobs()).rejects.toThrow(NotFoundException);
-  });
-
-  it('should throw NotFoundException if no Job is found by id', async () => {
-    // jest
-    //   .spyOn(controller['fetchJobByIdUseCase'], 'execute')
-    //   .mockRejectedValue(new NotFoundException());
-    // await expect(controller.fetchJobById({ Job_id: '1' })).rejects.toThrow(
-    //   NotFoundException,
-    // );
-  });
-
   it('should create a Job successfully', async () => {
     const mockJob = makeFakeJob();
 
@@ -87,5 +54,59 @@ describe('JobController', () => {
     const job = await controller.create(mockCreateJobDto);
 
     expect(job).toEqual(mockJob);
+  });
+
+  it('should update a Job successfully', async () => {
+    const mockJob = makeFakeJob();
+
+    const mockCreateJobDto = {
+      ...mockJob,
+      companyId: mockJob.company.id,
+    };
+
+    jest
+      .spyOn(controller['updateJobUseCase'], 'execute')
+      .mockResolvedValue(mockJob);
+
+    const job = await controller.update(
+      { job_id: mockJob.id },
+      mockCreateJobDto,
+    );
+
+    expect(job).toEqual(mockJob);
+  });
+
+  it('should update a Job to "PUBLISHED" successfully', async () => {
+    const mockJob = makeFakeJob();
+
+    jest
+      .spyOn(controller['updateJobUseCase'], 'execute')
+      .mockResolvedValue({ ...mockJob, status: JobStatus.PUBLISHED });
+
+    const job = await controller.publish({ job_id: mockJob.id });
+
+    expect(job.status).toEqual(JobStatus.PUBLISHED);
+  });
+
+  it('should update a Job to "ARCHIVED" successfully', async () => {
+    const mockJob = makeFakeJob();
+
+    jest
+      .spyOn(controller['updateJobUseCase'], 'execute')
+      .mockResolvedValue({ ...mockJob, status: JobStatus.ARCHIVED });
+
+    const job = await controller.archive({ job_id: mockJob.id });
+
+    expect(job.status).toEqual(JobStatus.ARCHIVED);
+  });
+
+  it('should delete a Job successfully', async () => {
+    jest
+      .spyOn(controller['deleteJobUseCase'], 'execute')
+      .mockResolvedValue(undefined);
+
+    const job = await controller.delete({ job_id: 'id' });
+
+    expect(job).toEqual(undefined);
   });
 });
