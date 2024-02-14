@@ -45,6 +45,7 @@ services:
       - api02
     ports:
       - "9999:9999"
+    restart: always
 
   db:
     image: postgres:16
