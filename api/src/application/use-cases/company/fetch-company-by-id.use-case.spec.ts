@@ -3,6 +3,9 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { CompanyRepository } from '../../../infra/database/repositories/company.repository';
 import { makeFakeCompany } from '../../../../test/factory/company.factory';
 import { FetchCompanyByIdUseCase } from './fetch-company-by-id.use-case';
+import { Company } from '../../../domain/entity/company.entity';
+import { getRepositoryToken } from '@nestjs/typeorm';
+import { repositoryMockFactory } from '../../../../test/factory/repositories/repository.factory';
 
 describe('FetchCompanyByIdUseCase', () => {
   let fetchCompanyByIdUseCase: FetchCompanyByIdUseCase;
@@ -10,13 +13,12 @@ describe('FetchCompanyByIdUseCase', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      imports: [],
       providers: [
         FetchCompanyByIdUseCase,
         {
-          provide: CompanyRepository,
-          useValue: {
-            findOneBy: jest.fn(),
-          },
+          provide: getRepositoryToken(Company),
+          useFactory: repositoryMockFactory,
         },
       ],
     }).compile();
@@ -24,7 +26,7 @@ describe('FetchCompanyByIdUseCase', () => {
     fetchCompanyByIdUseCase = module.get<FetchCompanyByIdUseCase>(
       FetchCompanyByIdUseCase,
     );
-    companyRepository = module.get<CompanyRepository>(CompanyRepository);
+    companyRepository = module.get(getRepositoryToken(Company));
   });
 
   it('should fetch company by id successfully', async () => {

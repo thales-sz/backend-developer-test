@@ -3,6 +3,9 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { FetchCompaniesUseCase } from './fetch-companies.use-case';
 import { CompanyRepository } from '../../../infra/database/repositories/company.repository';
 import { makeFakeCompany } from '../../../../test/factory/company.factory';
+import { getRepositoryToken } from '@nestjs/typeorm';
+import { Company } from '../../../domain/entity/company.entity';
+import { repositoryMockFactory } from '../../../../test/factory/repositories/repository.factory';
 
 describe('FetchCompaniesUseCase', () => {
   let fetchCompaniesUseCase: FetchCompaniesUseCase;
@@ -13,10 +16,8 @@ describe('FetchCompaniesUseCase', () => {
       providers: [
         FetchCompaniesUseCase,
         {
-          provide: CompanyRepository,
-          useValue: {
-            find: jest.fn(),
-          },
+          provide: getRepositoryToken(Company),
+          useFactory: repositoryMockFactory,
         },
       ],
     }).compile();
@@ -24,7 +25,7 @@ describe('FetchCompaniesUseCase', () => {
     fetchCompaniesUseCase = module.get<FetchCompaniesUseCase>(
       FetchCompaniesUseCase,
     );
-    companyRepository = module.get<CompanyRepository>(CompanyRepository);
+    companyRepository = module.get(getRepositoryToken(Company));
   });
 
   it('should fetch companies successfully', async () => {

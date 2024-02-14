@@ -1,10 +1,13 @@
 import { Test, TestingModule } from '@nestjs/testing';
-// import { NotFoundException } from '@nestjs/common';
 import { JobController } from './job.controller';
 import { CreateJobUseCase } from '../use-cases/job/create-job.use-case';
-import { JobRepository } from '../../infra/database/repositories/job.repository';
 import { makeFakeJob } from '../../../test/factory/job.factory';
-import { CompanyRepository } from '../../infra/database/repositories/company.repository';
+import { getRepositoryToken } from '@nestjs/typeorm';
+import { Job } from '../../domain/entity/job.entity';
+import { repositoryMockFactory } from '../../../test/factory/repositories/repository.factory';
+import { Company } from '../../domain/entity/company.entity';
+import { UpdateJobUseCase } from '../use-cases/job/update-job.use-case';
+import { DeleteJobUseCase } from '../use-cases/job/delete-job.use-case';
 
 describe('JobController', () => {
   let controller: JobController;
@@ -13,7 +16,19 @@ describe('JobController', () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [],
       controllers: [JobController],
-      providers: [CreateJobUseCase, JobRepository, CompanyRepository],
+      providers: [
+        CreateJobUseCase,
+        UpdateJobUseCase,
+        DeleteJobUseCase,
+        {
+          provide: getRepositoryToken(Job),
+          useFactory: repositoryMockFactory,
+        },
+        {
+          provide: getRepositoryToken(Company),
+          useFactory: repositoryMockFactory,
+        },
+      ],
     }).compile();
 
     controller = module.get<JobController>(JobController);

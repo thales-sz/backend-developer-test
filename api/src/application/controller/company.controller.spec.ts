@@ -2,9 +2,11 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { CompanyController } from './company.controller';
 import { FetchCompaniesUseCase } from '../use-cases/company/fetch-companies.use-case';
 import { FetchCompanyByIdUseCase } from '../use-cases/company/fetch-company-by-id.use-case';
-import { CompanyRepository } from '../../infra/database/repositories/company.repository';
 import { makeFakeCompany } from '../../../test/factory/company.factory';
 import { NotFoundException } from '@nestjs/common';
+import { getRepositoryToken } from '@nestjs/typeorm';
+import { Company } from '../../domain/entity/company.entity';
+import { repositoryMockFactory } from '../../../test/factory/repositories/repository.factory';
 
 describe('CompanyController', () => {
   let controller: CompanyController;
@@ -16,7 +18,10 @@ describe('CompanyController', () => {
       providers: [
         FetchCompaniesUseCase,
         FetchCompanyByIdUseCase,
-        CompanyRepository,
+        {
+          provide: getRepositoryToken(Company),
+          useFactory: repositoryMockFactory,
+        },
       ],
     }).compile();
 
