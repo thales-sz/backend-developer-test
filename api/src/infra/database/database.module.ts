@@ -17,6 +17,8 @@ import { CompanyRepository } from './repositories/company.repository';
         port: configService.get<number>('POSTGRES_PORT'),
         autoLoadEntities: true,
         entities: [join(__dirname, '**', '*.entity.{ts,js}')],
+        ssl:
+          configService.get<string>('NODE_ENV') === 'production' ? true : false,
       }),
       inject: [ConfigService],
     }),

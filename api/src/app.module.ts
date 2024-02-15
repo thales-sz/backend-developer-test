@@ -12,6 +12,9 @@ import { DatabaseModule } from './infra/database/database.module';
       isGlobal: true,
       validationSchema: Joi.object({
         PORT: Joi.number().required(),
+        NODE_ENV: Joi.string()
+          .valid('development', 'production', 'test')
+          .required(),
         POSTGRES_HOST: Joi.string().required(),
         POSTGRES_PORT: Joi.number().required(),
         POSTGRES_USER: Joi.string().required(),

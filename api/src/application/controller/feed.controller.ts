@@ -22,12 +22,10 @@ export class FeedController {
   @Get('/feed')
   @CacheKey('jobFeed')
   async fetchFeed() {
-    this.logger.log('Fetching job feed from S3 bucket...');
-
-    const bucketName = this.configService.getOrThrow('AWS_BUCKET_NAME');
+    this.logger.verbose('Fetching job feed from S3 bucket...');
 
     const jobFeed = await this.s3Service.fetchFromS3(
-      bucketName,
+      this.configService.getOrThrow('AWS_BUCKET_NAME'),
       'job-feed.json',
     );
 

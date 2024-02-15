@@ -18,27 +18,29 @@ import {
 } from '@nestjs/cache-manager';
 import { redisStore } from 'cache-manager-redis-store';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { FeedController } from './controller/feed.controller';
 
 @Module({
   imports: [
     DomainModule,
     TypeOrmModule.forFeature([Company, Job]),
-    CacheModule.registerAsync({
+    CacheModule.register({
       isGlobal: true,
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
         ttl: 60,
         max: 10,
         store: redisStore as unknown as CacheStore,
-        socket: {
-          host: configService.getOrThrow<string>('REDIS_HOST'),
-          port: configService.getOrThrow<string>('REDIS_PORT'),
-        },
+        host: configService.getOrThrow<string>('REDIS_HOST'),
+        password: configService.getOrThrow<string>('REDIS_PASSWORD'),
+        endpoint: configService.getOrThrow<string>('REDIS_ENDPOINT'),
+        port: configService.getOrThrow<number>('REDIS_PORT'),
+        user: configService.getOrThrow<string>('REDIS_USER'),
       }),
       inject: [ConfigService],
     }),
   ],
-  controllers: [CompanyController, JobController],
+  controllers: [CompanyController, JobController, FeedController],
   providers: [
     FetchCompaniesUseCase,
     FetchCompanyByIdUseCase,
