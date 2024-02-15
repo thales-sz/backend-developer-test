@@ -45,9 +45,7 @@ describe('DeleteJobUseCase', () => {
   });
 
   it('should throw NotFoundException if no Job is found when trying to delete a Job draft', async () => {
-    jest
-      .spyOn(jobRepository, 'findOneBy')
-      .mockRejectedValue(new NotFoundException());
+    jest.spyOn(jobRepository, 'findOneBy').mockResolvedValue(null);
 
     await expect(deleteJobUseCase.execute('invalid_id')).rejects.toThrow(
       NotFoundException,

@@ -10,6 +10,7 @@ import { Company } from '../domain/entity/company.entity';
 import { Job } from '../domain/entity/job.entity';
 import { UpdateJobUseCase } from './use-cases/job/update-job.use-case';
 import { DeleteJobUseCase } from './use-cases/job/delete-job.use-case';
+import { FetchJobFeedUseCase } from './use-cases/job/fetch-job-feed.use-case';
 
 @Module({
   imports: [DomainModule, TypeOrmModule.forFeature([Company, Job])],
@@ -17,6 +18,7 @@ import { DeleteJobUseCase } from './use-cases/job/delete-job.use-case';
   providers: [
     FetchCompaniesUseCase,
     FetchCompanyByIdUseCase,
+    FetchJobFeedUseCase,
     CreateJobUseCase,
     UpdateJobUseCase,
     DeleteJobUseCase,

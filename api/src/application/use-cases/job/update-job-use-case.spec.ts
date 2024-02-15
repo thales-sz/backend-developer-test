@@ -46,9 +46,7 @@ describe('UpdateJobUseCase', () => {
   it('should throw NotFoundException if no company is found when trying to update a Job draft', async () => {
     const mockJob = makeFakeJob();
 
-    jest
-      .spyOn(jobRepository, 'findOneBy')
-      .mockRejectedValue(new NotFoundException());
+    jest.spyOn(jobRepository, 'findOneBy').mockResolvedValue(null);
 
     await expect(updateJobUseCase.execute(mockJob)).rejects.toThrow(
       NotFoundException,

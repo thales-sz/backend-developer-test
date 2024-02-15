@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   HttpCode,
   Param,
   Post,
@@ -14,13 +15,15 @@ import { FetchJobDto } from '../../domain/dto/fetch-job.dto';
 import { UpdateJobUseCase } from '../use-cases/job/update-job.use-case';
 import { JobStatus } from '../../domain/enum/job-status.enum';
 import { DeleteJobUseCase } from '../use-cases/job/delete-job.use-case';
+import { FetchJobFeedUseCase } from '../use-cases/job/fetch-job-feed.use-case';
 
-@Controller('job')
+@Controller()
 export class JobController {
   constructor(
     private readonly createJobUseCase: CreateJobUseCase,
     private readonly updateJobUseCase: UpdateJobUseCase,
     private readonly deleteJobUseCase: DeleteJobUseCase,
+    private readonly fetchJobFeedUseCase: FetchJobFeedUseCase,
   ) {}
 
   @Post()
@@ -28,7 +31,7 @@ export class JobController {
     return this.createJobUseCase.execute(job);
   }
 
-  @Put('/:job_id/publish')
+  @Put('/job/:job_id/publish')
   async publish(@Param() { job_id }: FetchJobDto) {
     return this.updateJobUseCase.execute({
       id: job_id,
@@ -36,7 +39,7 @@ export class JobController {
     });
   }
 
-  @Put('/:job_id/archive')
+  @Put('/job/:job_id/archive')
   async archive(@Param() { job_id }: FetchJobDto) {
     return this.updateJobUseCase.execute({
       id: job_id,
@@ -44,7 +47,7 @@ export class JobController {
     });
   }
 
-  @Put('/:job_id')
+  @Put('/job/:job_id')
   async update(
     @Param() { job_id }: FetchJobDto,
     @Body() updateJob: UpdateJobDto,
@@ -53,8 +56,13 @@ export class JobController {
   }
 
   @HttpCode(204)
-  @Delete('/:job_id')
+  @Delete('/job/:job_id')
   async delete(@Param() { job_id }: FetchJobDto) {
     return this.deleteJobUseCase.execute(job_id);
+  }
+
+  @Get('/feed')
+  async fetchFeed() {
+    return this.fetchJobFeedUseCase.execute();
   }
 }

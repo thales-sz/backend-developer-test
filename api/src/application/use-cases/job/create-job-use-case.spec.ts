@@ -61,9 +61,7 @@ describe('CreateJobUseCase', () => {
       companyId: 'invalid_company_id',
     };
 
-    jest
-      .spyOn(companyRepository, 'findOneBy')
-      .mockRejectedValue(new NotFoundException());
+    jest.spyOn(companyRepository, 'findOneBy').mockResolvedValue(null);
 
     await expect(createJobUseCase.execute(mockCreateJobDto)).rejects.toThrow(
       NotFoundException,
