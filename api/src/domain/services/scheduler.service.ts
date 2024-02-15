@@ -3,20 +3,21 @@ import { S3Service } from './s3.service';
 import { JobRepository } from '../../infra/database/repositories/job.repository';
 import { JobStatus } from '../enum/job-status.enum';
 import { ConfigService } from '@nestjs/config';
-import { Cron } from '@nestjs/schedule';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Job } from '../entity/job.entity';
 
 @Injectable()
 export class SchedulerService {
   protected readonly logger = new Logger(SchedulerService.name);
 
   constructor(
+    @InjectRepository(Job)
     private readonly jobRepository: JobRepository,
     private readonly s3Service: S3Service,
     private readonly configService: ConfigService,
   ) {}
 
-  @Cron('*/5 * * * *')
-  async handleCron(): Promise<void> {
+  async execute(): Promise<void> {
     this.logger.verbose('Uploading job feed to S3 bucket...');
     const publishedJobs = this.jobRepository.find({
       where: { status: JobStatus.PUBLISHED },

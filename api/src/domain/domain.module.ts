@@ -1,10 +1,13 @@
 import { Module } from '@nestjs/common';
 import { ScheduleModule } from '@nestjs/schedule';
 import { S3Service } from './services/s3.service';
+import { SchedulerService } from './services/scheduler.service';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Job } from './entity/job.entity';
 
 @Module({
-  imports: [ScheduleModule.forRoot()],
-  providers: [S3Service],
-  exports: [S3Service],
+  imports: [ScheduleModule.forRoot(), TypeOrmModule.forFeature([Job])],
+  providers: [S3Service, SchedulerService],
+  exports: [S3Service, SchedulerService],
 })
 export class DomainModule {}

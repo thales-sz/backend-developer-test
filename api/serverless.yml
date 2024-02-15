@@ -1,23 +1,43 @@
 service: serverless-plooral
 
+useDotenv: true
+
 plugins:
   - serverless-offline
- 
-custom:
-  warmup:
-      - production
-      - staging
 
 provider:
   name: aws
   runtime: nodejs20.x
   region: sa-east-1
-  memorySize: 256
+  memorySize: 512
   timeout: 30
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - s3:GetObject
+        - s3:PutObject
+      Resource:
+        - "arn:aws:s3:::*"
+  environment:
+    PORT: ${env:PORT}
+    REDIS_PORT: ${env:REDIS_PORT}
+    REDIS_HOST: ${env:REDIS_HOST}
+    POSTGRES_PASSWORD: ${env:POSTGRES_PASSWORD}
+    POSTGRES_USER: ${env:POSTGRES_USER}
+    POSTGRES_DB: ${env:POSTGRES_DB}
+    POSTGRES_HOST: ${env:POSTGRES_HOST}
+    POSTGRES_PORT: ${env:POSTGRES_PORT}
+    NODE_ENV: ${env:NODE_ENV}
+    AWS_BUCKET_NAME: ${env:AWS_BUCKET_NAME}
+    AWS_REGION: ${env:AWS_REGION}
+    AWS_S3_REGION: ${env:AWS_S3_REGION}
+    AWS_ACCESS_KEY_ID: ${env:AWS_ACCESS_KEY_ID}
+    AWS_SECRET_ACCESS_KEY: ${env:AWS_SECRET_ACCESS_KEY}
 
 functions:
-  main:
+  feed:
     handler: dist/main/lambda.handler
     events:
-      - schedule:
-          rate: cron(*/5 * * * *)
+      - http:
+          method: post
+          path: feed
