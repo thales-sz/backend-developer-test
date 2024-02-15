@@ -5,9 +5,8 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
-  const app: INestApplication = (
-    await NestFactory.create<NestExpressApplication>(AppModule)
-  ).setGlobalPrefix('api/v1');
+  const app: INestApplication =
+    await NestFactory.create<NestExpressApplication>(AppModule);
   const logger = new Logger(AppModule.name);
   const configService = app.get<ConfigService>(ConfigService);
 

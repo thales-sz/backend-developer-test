@@ -1,34 +1,30 @@
-import { GetObjectCommand, S3Client } from '@aws-sdk/client-s3';
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { S3Service } from '../../../domain/services/s3.service';
 @Injectable()
 export class FetchJobFeedUseCase {
   protected logger: Logger = new Logger(FetchJobFeedUseCase.name);
 
-  private readonly s3Client: S3Client = new S3Client({
-    region: this.configService.getOrThrow('AWS_S3_REGION'),
-    credentials: {
-      accessKeyId: this.configService.getOrThrow('AWS_ACCESS_KEY_ID'),
-      secretAccessKey: this.configService.getOrThrow('AWS_SECRET_ACCESS_KEY'),
-    },
-  });
-
-  constructor(private readonly configService: ConfigService) {}
+  constructor(
+    private readonly configService: ConfigService,
+    private readonly s3Service: S3Service,
+  ) {}
 
   async execute(): Promise<void> {
     this.logger.log('Fetching job feed from S3 bucket...');
 
-    const s3Output = await this.s3Client.send(
-      new GetObjectCommand({
-        Bucket: this.configService.getOrThrow('AWS_BUCKET_NAME'),
-        Key: 'job-feed.json',
-      }),
+    const bucketName = this.configService.getOrThrow('AWS_BUCKET_NAME');
+
+    const jobFeed = await this.s3Service.fetchFromS3(
+      bucketName,
+      'job-feed.json',
     );
 
-    const jsonString = await s3Output.Body.transformToString();
+    if (!jobFeed) {
+      this.logger.error('Job feed not found');
+      throw new NotFoundException('Job feed not found');
+    }
 
-    const feed = JSON.parse(jsonString ?? '');
-
-    return feed;
+    return jobFeed;
   }
 }

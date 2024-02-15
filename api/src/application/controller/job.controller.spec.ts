@@ -9,9 +9,12 @@ import { Company } from '../../domain/entity/company.entity';
 import { UpdateJobUseCase } from '../use-cases/job/update-job.use-case';
 import { DeleteJobUseCase } from '../use-cases/job/delete-job.use-case';
 import { JobStatus } from '../../domain/enum/job-status.enum';
+import { FetchJobFeedUseCase } from '../use-cases/job/fetch-job-feed.use-case';
 
 describe('JobController', () => {
   let controller: JobController;
+
+  const mockFetchJobFeedUseCase = {};
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -21,6 +24,7 @@ describe('JobController', () => {
         CreateJobUseCase,
         UpdateJobUseCase,
         DeleteJobUseCase,
+        FetchJobFeedUseCase,
         {
           provide: getRepositoryToken(Job),
           useFactory: repositoryMockFactory,
@@ -30,7 +34,10 @@ describe('JobController', () => {
           useFactory: repositoryMockFactory,
         },
       ],
-    }).compile();
+    })
+      .overrideProvider(FetchJobFeedUseCase)
+      .useValue(mockFetchJobFeedUseCase)
+      .compile();
 
     controller = module.get<JobController>(JobController);
   });

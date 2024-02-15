@@ -28,7 +28,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
       isGlobal: true,
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
-        ttl: 10,
+        ttl: 60,
         max: 10,
         store: redisStore as unknown as CacheStore,
         socket: {

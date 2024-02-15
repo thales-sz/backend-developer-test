@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, Relation } from 'typeorm';
 import { Company } from './company.entity';
 import { AbstractEntity } from './abstract.entity';
 import { JobStatus } from '../enum/job-status.enum';
@@ -7,7 +7,7 @@ import { JobStatus } from '../enum/job-status.enum';
 export class Job extends AbstractEntity<Job> {
   @ManyToOne(() => Company, (company) => company.jobs)
   @JoinColumn({ name: 'company_id' })
-  company: Company;
+  company: Relation<Company>;
 
   @Column({ type: 'text', nullable: false })
   title: string;
