@@ -8,8 +8,13 @@ import { ConfigService } from '@nestjs/config';
 @Injectable()
 export class FetchJobFeedUseCase {
   protected logger: Logger = new Logger(FetchJobFeedUseCase.name);
+
   private readonly s3Client: S3Client = new S3Client({
     region: this.configService.getOrThrow('AWS_S3_REGION'),
+    credentials: {
+      accessKeyId: this.configService.getOrThrow('AWS_ACCESS_KEY_ID'),
+      secretAccessKey: this.configService.getOrThrow('AWS_SECRET_ACCESS_KEY'),
+    },
   });
 
   constructor(private readonly configService: ConfigService) {}

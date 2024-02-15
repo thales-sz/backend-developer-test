@@ -24,6 +24,7 @@ import { DatabaseModule } from './infra/database/database.module';
       }),
       envFilePath: './.env',
     }),
+    CacheModule.register()
   ],
   controllers: [],
   providers: [],
