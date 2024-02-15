@@ -1,9 +1,5 @@
 import { GetObjectCommand, S3Client } from '@aws-sdk/client-s3';
-import {
-  Injectable,
-  Logger,
-  UnprocessableEntityException,
-} from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 @Injectable()
 export class FetchJobFeedUseCase {
@@ -20,6 +16,8 @@ export class FetchJobFeedUseCase {
   constructor(private readonly configService: ConfigService) {}
 
   async execute(): Promise<void> {
+    this.logger.log('Fetching job feed from S3 bucket...');
+
     const s3Output = await this.s3Client.send(
       new GetObjectCommand({
         Bucket: this.configService.getOrThrow('AWS_BUCKET_NAME'),
@@ -27,15 +25,10 @@ export class FetchJobFeedUseCase {
       }),
     );
 
-    try {
-      const jsonString = await s3Output.Body.transformToString();
+    const jsonString = await s3Output.Body.transformToString();
 
-      const feed = JSON.parse(jsonString ?? '');
+    const feed = JSON.parse(jsonString ?? '');
 
-      return feed;
-    } catch (error) {
-      this.logger.error('Error parsing job feed');
-      throw new UnprocessableEntityException('Error parsing job feed');
-    }
+    return feed;
   }
 }

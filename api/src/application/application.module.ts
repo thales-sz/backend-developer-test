@@ -11,9 +11,34 @@ import { Job } from '../domain/entity/job.entity';
 import { UpdateJobUseCase } from './use-cases/job/update-job.use-case';
 import { DeleteJobUseCase } from './use-cases/job/delete-job.use-case';
 import { FetchJobFeedUseCase } from './use-cases/job/fetch-job-feed.use-case';
+import { APP_INTERCEPTOR } from '@nestjs/core';
+import {
+  CacheInterceptor,
+  CacheModule,
+  CacheStore,
+} from '@nestjs/cache-manager';
+import { redisStore } from 'cache-manager-redis-store';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
-  imports: [DomainModule, TypeOrmModule.forFeature([Company, Job])],
+  imports: [
+    DomainModule,
+    TypeOrmModule.forFeature([Company, Job]),
+    CacheModule.registerAsync({
+      isGlobal: true,
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        ttl: 10,
+        max: 10,
+        store: redisStore as unknown as CacheStore,
+        socket: {
+          host: configService.getOrThrow<string>('REDIS_HOST'),
+          port: configService.getOrThrow<string>('REDIS_PORT'),
+        },
+      }),
+      inject: [ConfigService],
+    }),
+  ],
   controllers: [CompanyController, JobController],
   providers: [
     FetchCompaniesUseCase,
@@ -22,6 +47,10 @@ import { FetchJobFeedUseCase } from './use-cases/job/fetch-job-feed.use-case';
     CreateJobUseCase,
     UpdateJobUseCase,
     DeleteJobUseCase,
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: CacheInterceptor,
+    },
   ],
 })
 export class ApplicationModule {}

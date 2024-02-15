@@ -16,6 +16,7 @@ import { UpdateJobUseCase } from '../use-cases/job/update-job.use-case';
 import { JobStatus } from '../../domain/enum/job-status.enum';
 import { DeleteJobUseCase } from '../use-cases/job/delete-job.use-case';
 import { FetchJobFeedUseCase } from '../use-cases/job/fetch-job-feed.use-case';
+import { CacheKey, CacheTTL } from '@nestjs/cache-manager';
 
 @Controller()
 export class JobController {
@@ -62,6 +63,8 @@ export class JobController {
   }
 
   @Get('/feed')
+  @CacheKey('jobFeed')
+  @CacheTTL(10)
   async fetchFeed() {
     return this.fetchJobFeedUseCase.execute();
   }

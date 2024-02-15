@@ -67,8 +67,6 @@ services:
       - '6379:6379'
     environment:
       - ALLOW_EMPTY_PASSWORD=yes
-    volumes:
-      - 'redis_data:/redis/data'
 
 networks:
   default:

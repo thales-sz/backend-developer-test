@@ -21,10 +21,11 @@ import { DatabaseModule } from './infra/database/database.module';
         AWS_S3_REGION: Joi.string().required(),
         AWS_ACCESS_KEY_ID: Joi.string().required(),
         AWS_SECRET_ACCESS_KEY: Joi.string().required(),
+        REDIS_HOST: Joi.string().required(),
+        REDIS_PORT: Joi.number().required(),
       }),
       envFilePath: './.env',
     }),
-    CacheModule.register()
   ],
   controllers: [],
   providers: [],
