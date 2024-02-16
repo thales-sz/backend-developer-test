@@ -49,10 +49,74 @@ The solution adopts an architecture that includes an Nginx load balancer to dist
 Endpoint when running local: `http://localhost:9999`
 
 - `GET /feed`: List existing publishe jobs.
-- `POST /feed`: Runs the lambda function responsible for updating the publications in the s3 bucket (Used on serverless environment)
+Expected output:
+ ```json
+  [
+    ...,
+    {
+        "id": "e73079f9-9571-4de8-b5f3-1f69fe8dadbb",
+        "title": "Backend Developer",
+        "description": "serviço bão",
+        "company": "ABC Corp",
+        "createdAt": "2024-02-15T23:02:17.539Z"
+    },
+    ...,
+  ]
+ ```
+- `POST /feed`: Runs the lambda function responsible for updating the publications in the s3 bucket (Used on serverless environment for debugging)
 - `GET /companies`: List existing companies.
+Expected output:
+```json
+  [
+    {
+        "id": "90d19829-8621-411b-9695-29c5054abca4",
+        "createdAt": "2024-02-16T21:35:53.623Z",
+        "updatedAt": "2024-02-16T21:35:53.623Z",
+        "name": "ABC Corp"
+    },
+    ...,
+  ]
+ ```
 - `GET /companies/:company_id`: Fetch a specific company by ID.
+Expected output:
+```json
+    {
+        "id": "90d19829-8621-411b-9695-29c5054abca4",
+        "createdAt": "2024-02-16T21:35:53.623Z",
+        "updatedAt": "2024-02-16T21:35:53.623Z",
+        "name": "ABC Corp"
+    }
+ ```
 - `POST /job`: Create a job posting draft.
+Input:
+```json
+    {
+        "title": "Backend Developer",
+        "description": "serviço bão",
+        "location": "remote",
+        "companyId": "8de43cf8-7612-4444-b960-8a1c9816a981",
+        "notes": "notes" (Optional)
+    }
+ ```
+Expected output:
+```json
+    {
+        "title": "Backend Developer",
+        "description": "serviço bão",
+        "location": "remote",
+        "notes": "notes",
+        "company": {
+            "id": "90d19829-8621-411b-9695-29c5054abca4",
+            "createdAt": "2024-02-16T21:35:53.623Z",
+            "updatedAt": "2024-02-16T21:35:53.623Z",
+            "name": "ABC Corp"
+        },
+        "id": "a2aaa652-a90e-4a9a-9003-6a264edaaf57",
+        "createdAt": "2024-02-16T21:52:55.984Z",
+        "updatedAt": "2024-02-16T21:52:55.984Z",
+        "status": "draft"
+    }
+ ```
 - `PUT /job/:job_id/publish`: Publish a job posting draft.
 - `PUT /job/:job_id`: Edit a job posting draft (title, location, description).
 - `DELETE /job/:job_id`: Delete a job posting draft.

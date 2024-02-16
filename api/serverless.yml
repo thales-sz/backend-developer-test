@@ -43,3 +43,5 @@ functions:
       - http:
           method: post
           path: feed
+      - eventBridge:
+          schedule: rate(10 minutes)

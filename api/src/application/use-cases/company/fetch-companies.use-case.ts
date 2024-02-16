@@ -10,13 +10,13 @@ export class FetchCompaniesUseCase {
   constructor(
     @InjectRepository(Company)
     private readonly companyRepository: CompanyRepository,
-  ) {}
+  ) { }
 
   async execute(): Promise<Company[]> {
     const company = await this.companyRepository.find();
 
     if (!company || company.length === 0) {
-      this.logger.error('No companies found');
+      this.logger.warn('No companies found');
       throw new NotFoundException('No companies found');
     }
 

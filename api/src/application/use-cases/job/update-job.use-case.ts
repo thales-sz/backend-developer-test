@@ -8,13 +8,13 @@ export class UpdateJobUseCase {
 
   constructor(
     @InjectRepository(Job) private readonly jobRepository: JobRepository,
-  ) {}
+  ) { }
 
   async execute(job: Partial<Job>): Promise<Job> {
     const oldJob = await this.jobRepository.findOneBy({ id: job.id });
 
     if (!oldJob) {
-      this.logger.error(`Job with id ${job.id} not found`);
+      this.logger.warn(`Job with id ${job.id} not found`);
       throw new NotFoundException(`Job with id ${job.id} not found`);
     }
 

@@ -15,7 +15,7 @@ export class CreateJobUseCase {
     private readonly jobRepository: JobRepository,
     @InjectRepository(Company)
     private readonly companyRepository: CompanyRepository,
-  ) {}
+  ) { }
 
   async execute(createJob: CreateJobDto): Promise<Job> {
     const { companyId, ...job } = createJob;
@@ -23,7 +23,7 @@ export class CreateJobUseCase {
     const company = await this.companyRepository.findOneBy({ id: companyId });
 
     if (!company) {
-      this.logger.error('Company not found');
+      this.logger.warn('Company not found');
       throw new NotFoundException('Company not found');
     }
 

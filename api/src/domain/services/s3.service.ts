@@ -16,7 +16,7 @@ export class S3Service {
   protected logger: Logger = new Logger(S3Service.name);
 
   private readonly s3Client: S3Client = new S3Client({
-    region: this.configService.getOrThrow('AWS_S3_REGION'),
+    region: this.configService.getOrThrow('AWS_REGION'),
     credentials: {
       accessKeyId: this.configService.getOrThrow('AWS_ACCESS_KEY_ID'),
       secretAccessKey: this.configService.getOrThrow('AWS_SECRET_ACCESS_KEY'),

@@ -17,7 +17,7 @@ export class FeedController {
     private readonly configService: ConfigService,
     private readonly s3Service: S3Service,
     private readonly schedulerService: SchedulerService,
-  ) {}
+  ) { }
 
   @Get('/feed')
   @CacheKey('jobFeed')
@@ -30,7 +30,7 @@ export class FeedController {
     );
 
     if (!jobFeed) {
-      this.logger.error('Job feed not found');
+      this.logger.warn('Job feed not found');
       throw new NotFoundException('Job feed not found');
     }
 

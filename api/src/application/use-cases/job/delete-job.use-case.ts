@@ -9,13 +9,13 @@ export class DeleteJobUseCase {
 
   constructor(
     @InjectRepository(Job) private readonly jobRepository: JobRepository,
-  ) {}
+  ) { }
 
   async execute(id: string): Promise<void> {
     const job = await this.jobRepository.findOneBy({ id });
 
     if (!job) {
-      this.logger.error(`Job with id ${id} not found`);
+      this.logger.warn(`Job with id ${id} not found`);
       throw new NotFoundException(`Job with id ${id} not found`);
     }
 
