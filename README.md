@@ -35,6 +35,8 @@ To run the application locally, follow these steps:
    cd api
    docker compose up --build
     ```
+    
+Do not forget to update the .env file with the correct credentials
 
 By running these commands the program will bring up 5 docker containers, 2 instances of the application running on port 3030, an nginx load balancer on port 9999, the postgres and redis databases.
 
@@ -121,6 +123,21 @@ Expected output:
 - `PUT /job/:job_id`: Edit a job posting draft (title, location, description).
 - `DELETE /job/:job_id`: Delete a job posting draft.
 - `PUT /job/:job_id/archive`: Archive an active job posting.
+
+### Bonus Questions
+
+1. Discuss scalability solutions for the job moderation feature under high load conditions. Consider that over time the system usage grows significantly, to the point where we will have thousands of jobs published every hour. Consider the API will be able to handle the requests, but the serverless component will be overwhelmed with requests to moderate the jobs. This will affect the database connections and calls to the OpenAI API. How would you handle those issues and what solutions would you implement to mitigate the issues?
+
+A: One approach is to horizontally scale the serverless component that handles job moderation. This involves adding more instances of the serverless component as the load increases. In addition, to reduce the load on the serverless component and the calls to the OpenAI API, you could implement a caching system for the moderation results between server instances, such as a Redis system with an SQS-like queue and also I would fine tune the queue.
+
+2. Propose a strategy for delivering the job feed globally with sub-millisecond latency. Consider now that we need to provide a low latency endpoint that can serve the job feed content worldwide. Using AWS as a cloud provider, what technologies would you need to use to implement this feature and how would you do it?
+
+A: The approahc is utilize Amazon CloudFront, AWS's global content delivery network (CDN) service. CloudFront caches content at edge locations around the world, reducing latency by serving content from the nearest edge location to the user.
+We can also configure CloudFront to cache the job feed content and serve it globally with low latency.
+
+## Notes
+
+- Feel free to ask me any doubt at: thales.souz@outlook.com
 
 ## License
 
