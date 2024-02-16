@@ -24,18 +24,17 @@ import { FeedController } from './controller/feed.controller';
   imports: [
     DomainModule,
     TypeOrmModule.forFeature([Company, Job]),
-    CacheModule.register({
+    CacheModule.registerAsync({
       isGlobal: true,
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
         ttl: 60,
         max: 10,
         store: redisStore as unknown as CacheStore,
-        host: configService.getOrThrow<string>('REDIS_HOST'),
-        password: configService.getOrThrow<string>('REDIS_PASSWORD'),
-        endpoint: configService.getOrThrow<string>('REDIS_ENDPOINT'),
-        port: configService.getOrThrow<number>('REDIS_PORT'),
-        user: configService.getOrThrow<string>('REDIS_USER'),
+        socket: {
+          host: configService.getOrThrow<string>('REDIS_HOST'),
+          port: configService.getOrThrow<string>('REDIS_PORT'),
+        },
       }),
       inject: [ConfigService],
     }),
