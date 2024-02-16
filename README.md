@@ -39,11 +39,12 @@ To run the application locally, follow these steps:
 To run the tests, at the root directory run:
    ```bash
    npm run test
-    ```
-    Or for coverage:
-    ```bash
+  ```
+
+Or for coverage:
+  ```bash
     npm run test:cov
-    ```
+  ```
     
 **Do not forget to update the .env file with the correct credentials**
 
@@ -63,7 +64,6 @@ Endpoint when running local: `http://localhost:9999`
 Expected output:
  ```json
   [
-    ...,
     {
         "id": "e73079f9-9571-4de8-b5f3-1f69fe8dadbb",
         "title": "Backend Developer",
