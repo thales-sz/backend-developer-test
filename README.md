@@ -35,8 +35,17 @@ To run the application locally, follow these steps:
    cd api
    docker compose up --build
     ```
+
+To run the tests, at the root directory run:
+   ```bash
+   npm run test
+    ```
+    Or for coverage:
+    ```bash
+    npm run test:cov
+    ```
     
-Do not forget to update the .env file with the correct credentials
+**Do not forget to update the .env file with the correct credentials**
 
 By running these commands the program will bring up 5 docker containers, 2 instances of the application running on port 3030, an nginx load balancer on port 9999, the postgres and redis databases.
 

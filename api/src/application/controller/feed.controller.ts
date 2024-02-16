@@ -17,7 +17,7 @@ export class FeedController {
     private readonly configService: ConfigService,
     private readonly s3Service: S3Service,
     private readonly schedulerService: SchedulerService,
-  ) { }
+  ) {}
 
   @Get('/feed')
   @CacheKey('jobFeed')
